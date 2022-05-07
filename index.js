@@ -20,6 +20,7 @@ async function run()
         await client.connect();
         const itemCollection=client.db('warehouse-management').collection('items');
         const myItemCollection=client.db('warehouse-management').collection('myItems');
+        const latestItemCollection=client.db('warehouse-management').collection('latestItems');
 
         app.get('/items', async(req,res)=>{
             const query={};
@@ -44,6 +45,19 @@ async function run()
             const id=req.params.id;
             const query={_id: ObjectId(id)};
             const item=await myItemCollection.findOne(query);
+            res.send(item);
+        });
+        //Latest Items
+        app.get('/latestItems', async(req,res)=>{
+            const query={};
+            const cursor=latestItemCollection.find(query);
+            const items=await cursor.toArray();
+            res.send(items);
+        });
+        app.get('/latestItems/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id: ObjectId(id)};
+            const item=await latestItemCollection.findOne(query);
             res.send(item);
         });
         //Post
