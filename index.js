@@ -21,6 +21,8 @@ async function run()
         const itemCollection=client.db('warehouse-management').collection('items');
         const myItemCollection=client.db('warehouse-management').collection('myItems');
         const latestItemCollection=client.db('warehouse-management').collection('latestItems');
+        const marketPlaceCollection=client.db('warehouse-management').collection('marketPlace');
+
 
         app.get('/items', async(req,res)=>{
             const query={};
@@ -58,6 +60,19 @@ async function run()
             const id=req.params.id;
             const query={_id: ObjectId(id)};
             const item=await latestItemCollection.findOne(query);
+            res.send(item);
+        });
+        //MarketPlace
+        app.get('/marketPlace', async(req,res)=>{
+            const query={};
+            const cursor=marketPlaceCollection.find(query);
+            const items=await cursor.toArray();
+            res.send(items);
+        });
+        app.get('/marketPlace/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id: ObjectId(id)};
+            const item=await marketPlaceCollection.findOne(query);
             res.send(item);
         });
         //Post
