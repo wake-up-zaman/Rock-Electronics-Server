@@ -19,6 +19,7 @@ async function run()
     try{
         await client.connect();
         const itemCollection=client.db('warehouse-management').collection('items');
+        const myItemCollection=client.db('warehouse-management').collection('myItems');
 
         app.get('/items', async(req,res)=>{
             const query={};
@@ -32,12 +33,39 @@ async function run()
             const item=await itemCollection.findOne(query);
             res.send(item);
         });
+        //My Items
+        app.get('/myItems', async(req,res)=>{
+            const query={};
+            const cursor=myItemCollection.find(query);
+            const items=await cursor.toArray();
+            res.send(items);
+        });
+        app.get('/myItems/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id: ObjectId(id)};
+            const item=await myItemCollection.findOne(query);
+            res.send(item);
+        });
+        //Post
         app.post('/items', async(req,res)=>{
             const newItem=req.body;
             const result=await itemCollection.insertOne(newItem);
             res.send(result);
         })
-
+        //Delete
+        app.delete('/items/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id: ObjectId(id)};
+            const result=await itemCollection.deleteOne(query);
+            res.send(result);
+        });
+        //My Item Delete
+        app.delete('/myItems/:id',async(req,res)=>{
+            const id=req.params.id;
+            const query={_id: ObjectId(id)};
+            const result=await myItemCollection.deleteOne(query);
+            res.send(result);
+        });
     }
     finally{
 
