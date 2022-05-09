@@ -97,7 +97,7 @@ async function run()
             const options={upsert:true};
             const updatedDoc={
                 $set: {
-                    quantity:updatedQuantity.number
+                    quantity:updatedQuantity,
                 }
             };
             const result=await userCollection.updateOne(filter,updatedDoc,options);
