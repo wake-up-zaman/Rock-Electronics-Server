@@ -4,7 +4,7 @@ require('dotenv').config();
 // const jwt=require('jsonwebtoken');
 const port=process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const res = require('express/lib/response');
+// const res = require('express/lib/response');
 
 
 const app=express();
@@ -90,9 +90,10 @@ async function run()
         })
 
         //Update restock
-        app.put('/items/:id', async(req,res)=>{
+        app.put('/restokeItems/:id', async(req,res)=>{
             const id=req.params.id;
-            const updatedQuantity=req.body;
+            console.log(id);
+            const updatedQuantity=req.body.quantity;
             const filter={_id:ObjectId(id)};
             const options={upsert:true};
             const updatedDoc={
@@ -102,11 +103,12 @@ async function run()
             };
             const result=await itemCollection.updateOne(filter,updatedDoc,options);
             res.send(result);
+            console.log(result);
         })
         //update deliver
-        app.put("/items/:id", async (req, res) => {
+        app.put("/deliverItems/:id", async (req, res) => {
             const id = req.params.id;
-            const updatedProduct = req.body;
+            const updatedProduct = req.body.deliver;
             console.log(updatedProduct.quantity);
             console.log(typeof updatedProduct.quantity);
             const filter = { _id: ObjectId(id) };
