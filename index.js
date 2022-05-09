@@ -1,7 +1,7 @@
 const express=require('express');
 const cors = require('cors');
 require('dotenv').config();
-const jwt=require('jsonwebtoken');
+// const jwt=require('jsonwebtoken');
 const port=process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const res = require('express/lib/response');
@@ -25,11 +25,11 @@ async function run()
         const latestItemCollection=client.db('warehouse-management').collection('latestItems');
         const marketPlaceCollection=client.db('warehouse-management').collection('marketPlace');
 
-        app.post('/login',async(req,res)=>{
-            const user=req.body;
-            const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1d'})
-        })
-        res.send({accessToken});
+        // app.post('/login',async(req,res)=>{
+        //     const user=req.body;
+        //     const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1d'})
+        // })
+        // res.send({accessToken});
         app.get('/items', async(req,res)=>{
             const query={};
             const cursor=itemCollection.find(query);
