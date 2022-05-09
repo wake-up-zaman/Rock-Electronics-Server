@@ -100,7 +100,7 @@ async function run()
                     quantity:updatedQuantity,
                 }
             };
-            const result=await userCollection.updateOne(filter,updatedDoc,options);
+            const result=await itemCollection.updateOne(filter,updatedDoc,options);
             res.send(result);
         })
 
