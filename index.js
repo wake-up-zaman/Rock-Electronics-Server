@@ -113,10 +113,7 @@ async function run()
             const options = { upsert: true };
             const updatedDoc = {
               $set: {
-                // name: updatedProduct.name,
-                // email: updatedProduct.email,
-                quantity: updatedProduct.quantity,
-                // price: updatedProduct.price,
+                quantity: updatedProduct,
               },
             };
             const result = await itemCollection.updateOne(filter,updatedDoc,options
