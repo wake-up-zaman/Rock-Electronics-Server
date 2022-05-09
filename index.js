@@ -1,8 +1,10 @@
 const express=require('express');
 const cors = require('cors');
 require('dotenv').config();
+const jwt=require('jsonwebtoken');
 const port=process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const res = require('express/lib/response');
 
 
 const app=express();
@@ -23,7 +25,11 @@ async function run()
         const latestItemCollection=client.db('warehouse-management').collection('latestItems');
         const marketPlaceCollection=client.db('warehouse-management').collection('marketPlace');
 
-
+        app.post('/login',async(req,res)=>{
+            const user=req.body;
+            const accessToken=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1d'})
+        })
+        res.send({accessToken});
         app.get('/items', async(req,res)=>{
             const query={};
             const cursor=itemCollection.find(query);
@@ -49,6 +55,7 @@ async function run()
             const item=await myItemCollection.findOne(query);
             res.send(item);
         });
+       
         //Latest Items
         app.get('/latestItems', async(req,res)=>{
             const query={};
@@ -81,6 +88,24 @@ async function run()
             const result=await itemCollection.insertOne(newItem);
             res.send(result);
         })
+
+        //Update
+        app.put('/items/:id', async(req,res)=>{
+            const id=req.params.id;
+            const updatedQuantity=req.body;
+            const filter={_id:ObjectId(id)};
+            const options={upsert:true};
+            const updatedDoc={
+                $set: {
+                    quantity:updatedQuantity.number
+                }
+            };
+            const result=await userCollection.updateOne(filter,updatedDoc,options);
+            res.send(result);
+        })
+
+
+
         //Delete
         app.delete('/items/:id',async(req,res)=>{
             const id=req.params.id;
